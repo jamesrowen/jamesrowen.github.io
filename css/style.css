@@ -105,7 +105,7 @@ a {
 #nav a:hover { margin-left: 5px; }
 #email:hover { color: #F04C43; }
 #github:hover { color: #06C66B; }
-#facebook:hover { color: #44619D; }
+#linkedin:hover { color: #0077B5; }
 
 #nav h1 { font-size:1.1em; font-weight:normal; }
 #nav ul { list-style:none; margin-top:2px; }
@@ -175,6 +175,7 @@ a {
 	font-size: 1.2em;
 	margin-bottom: .4em;
 	padding-bottom: 3px;
+	font-weight: bold;
 }
 
 .post h5 {
@@ -195,7 +196,6 @@ a {
 
 .project-blurb {
 	border-top: 1px solid;
-	border-bottom: 1px solid;
 	padding: .5em 0 .25em 0;
 	margin-bottom: 2.5em;
 }
@@ -215,6 +215,16 @@ img.project-image {
 
 .resume-section {
 	margin: 1.5em 0;
+}
+
+.experience-heading {
+	display: flex;
+}
+.experience-heading > div {
+	width: 50%;
+}
+.experience-heading > div:nth-child(2) {
+	text-align: right;
 }
 
 
