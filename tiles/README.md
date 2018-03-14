@@ -1,2 +1,0 @@
-# tiles
-spinning tile visualization

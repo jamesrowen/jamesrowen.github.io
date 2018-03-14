@@ -47,10 +47,6 @@ function setMouseListeners(element) {
   element.addEventListener('click', e => {
     el('mode').classList.toggle('closed');
   });
-
-  element.addEventListener('dragstart', e => {
-
-  });
 }
 
 
