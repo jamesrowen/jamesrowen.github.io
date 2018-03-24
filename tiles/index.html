@@ -14,12 +14,12 @@
   <body>
     <div id="exportText"></div>
 
-    <div id="mode" class="controls">
+    <div id="mode" class="controls closed">
       <div id="playback">
         <div class="controlHeader">playback</div>
         <div class="controlPanel">
-          <div id="playing" class="button" onclick="updateSetting(this.id, !this.value)">play</div>
-          <div id="rewind" class="button" onclick="updateSetting(this.id, !this.value)" />reverse</div>
+          <div id="playing" class="button" onclick="updateSetting(this.id, !this.value)">play/pause</div>
+          <div id="rewind" class="button" onclick="updateSetting(this.id, !this.value)" />rewind</div>
           <div class="slider speedControl spinMode twodig">
             <label for="spinSpeed"><div>speed</div><span></span></label>
             <input type="range" id="spinSpeed" min="0" max="99" step="1" oninput="updateSetting(this.id, this.value)" />
@@ -49,50 +49,53 @@
       </div>
 
       <div id="modes">
+        <div id="orbitBubble" class="bubble">
+          <div>Scroll or drag to move around, press +/- to zoom</div>
+        </div>
         <div id="modeTabs">
           <div class="controlHeader" onclick="setMode('spin')">spin</div><!--
-       --><div class="controlHeader pulse" onclick="setMode('pattern')">pattern</div><!--
-       --><div class="controlHeader pulse" onclick="setMode('orbit')">spiral</div>
+       --><div class="controlHeader" onclick="setMode('pattern')">pattern</div><!--
+       --><div class="controlHeader" onclick="setMode('orbit')">spiral</div>
         </div>
         <div class="controlPanel">
           <div class="slider left spinMode">
             <label for="tileSize"><div>size</div><span></span></label>
-            <input type="range" id="tileSize" min="45" max="180" step="1" oninput="updateSetting(this.id, this.value)" />
+            <input type="range" id="tileSize" min="45" max="180" step="1" oninput="useModeSlider(this.id, this.value)" />
           </div>
           <div class="slider right spinMode twodig">
             <label for="spinXSpeed"><div>flip x</div><span></span></label>
-            <input type="range" id="spinXSpeed" min="0" max="99" step="1" oninput="updateSetting(this.id, this.value)" />
+            <input type="range" id="spinXSpeed" min="0" max="99" step="1" oninput="useModeSlider(this.id, this.value)" />
           </div>
           <div class="button spinMode" onclick="clearSpinX()">clear</div>
           <div class="slider left spinMode">
             <label for="tileScale"><div>scale</div><span></span></label>
-            <input type="range" id="tileScale" min=".7" max="2.3" step=".02" oninput="updateSetting(this.id, this.value)" />
+            <input type="range" id="tileScale" min=".7" max="2.3" step=".02" oninput="useModeSlider(this.id, this.value)" />
           </div>
           <div class="slider right spinMode twodig">
             <label for="spinYSpeed"><div>flip y</div><span></span></label>
-            <input type="range" id="spinYSpeed" min="0" max="99" step="1" oninput="updateSetting(this.id, this.value)" />
+            <input type="range" id="spinYSpeed" min="0" max="99" step="1" oninput="useModeSlider(this.id, this.value)" />
           </div>
           <div class="button spinMode" onclick="clearSpinY()">clear</div>
           <div class="slider left spinMode">
             <label for="margin"><div>margin</div><span></span></label>
-            <input type="range" id="margin" min="0" max="60" step="1" oninput="updateSetting(this.id, this.value)" />
+            <input type="range" id="margin" min="0" max="60" step="1" oninput="useModeSlider(this.id, this.value)" />
           </div>
           <div class="slider right spinMode twodig">
             <label for="shapeIterations"><div>curve</div><span></span></label>
-            <input type="range" id="shapeIterations" min="2" max="8" step="1" oninput="updateSetting(this.id, this.value)" />
+            <input type="range" id="shapeIterations" min="2" max="8" step="1" oninput="useModeSlider(this.id, this.value)" />
           </div>
 
           <div class="slider left patternMode">
             <label for="transLength"><div>spread</div><span></span></label>
-            <input type="range" id="transLength" min=".01" max=".5" step=".01" oninput="updateSetting(this.id, this.value)" />
+            <input type="range" id="transLength" min=".01" max=".5" step=".01" oninput="useModeSlider(this.id, this.value)" />
           </div>
-          <div id="loopTrans" class="button patternMode" onclick="updateSetting(this.id, !this.value)">loop</div>
+          <div id="loopTrans" class="button patternMode" onclick="toggleLoop()">loop</div>
           <div id="shortRotations" class="button patternMode" onclick="updateSetting(this.id, !this.value)">short</div>
           <div id="rotX" class="button patternMode" onclick="updateSetting(this.id, !this.value)">flip x</div>
           <div id="rotY" class="button patternMode" onclick="updateSetting(this.id, !this.value)">flip y</div>
           <div class="slider left patternMode">
             <label for="patTileSize"><div>size</div><span></span></label>
-            <input type="range" id="patTileSize" min="30" max="150" step="1" oninput="updateSetting(this.id, this.value)" />
+            <input type="range" id="patTileSize" min="30" max="150" step="1" oninput="useModeSlider(this.id, this.value)" />
           </div>
           <div class="button patternMode trans" onclick="addTransition('rtl')">&lt;-</div>
           <div class="button patternMode trans" onclick="addTransition('center-circle')">O</div>
@@ -100,7 +103,7 @@
           <div class="button patternMode trans" onclick="addTransition('cascade up')">/\</div>
           <div class="slider left patternMode">
             <label for="patTileScale"><div>scale</div><span></span></label>
-            <input type="range" id="patTileScale" min=".7" max="2" step=".02" oninput="updateSetting(this.id, this.value)" />
+            <input type="range" id="patTileScale" min=".7" max="2" step=".02" oninput="useModeSlider(this.id, this.value)" />
           </div>
           <div class="button patternMode trans" onclick="addTransition('ltr')">-&gt;</div>
           <div class="button patternMode trans" onclick="addTransition('diamond')">&lt;&gt;</div>
@@ -113,15 +116,15 @@
           </div>
           <div class="slider right orbitMode fourdig">
             <label for="numTiles"><div>tiles</div><span></span></label>
-            <input type="range" id="numTiles" min="100" max="1990" step="10" oninput="updateSetting(this.id, this.value)" />
+            <input type="range" id="numTiles" min="100" max="1990" step="10" oninput="useModeSlider(this.id, this.value)" />
           </div>
           <div class="slider left orbitMode">
             <label for="curl"><div>curl</div><span></span></label>
-            <input type="range" id="curl" min="1" max="60" step="1" oninput="updateSetting(this.id, this.value)" />
+            <input type="range" id="curl" min="1" max="60" step="1" oninput="useModeSlider(this.id, this.value)" />
           </div>
           <div class="slider right orbitMode">
             <label for="growth"><div>growth</div><span></span></label>
-            <input type="range" id="growth" min="1" max="130" step="1" oninput="updateSetting(this.id, this.value)" />
+            <input type="range" id="growth" min="1" max="130" step="1" oninput="useModeSlider(this.id, this.value)" />
           </div>
           <div class="button orbitMode" onclick="resetCamPos()">origin</div>
         </div>
@@ -130,25 +133,29 @@
       <div id="presets">
         <div class="controlHeader">presets</div>
         <div class="controlPanel">
-          <div class="button pulse spinMode" onclick="loadPreset('s1')">s1</div>
-          <div class="button pulse spinMode" onclick="loadPreset('s2')">s2</div>
-          <div class="button pulse spinMode" onclick="loadPreset('s3')">s3</div>
-          <div class="button pulse spinMode" onclick="loadPreset('s4')">s4</div>
-          <div class="button pulse patternMode" onclick="loadPreset('p1')">p1</div>
-          <div class="button pulse patternMode" onclick="loadPreset('p2')">p2</div>
-          <div class="button pulse patternMode" onclick="loadPreset('p3')">p3</div>
-          <div class="button pulse patternMode" onclick="loadPreset('p4')">p4</div>
-          <div class="button pulse patternMode" onclick="loadPreset('p5')">p5</div>
-          <div class="button pulse orbitMode" onclick="loadPreset('o1')">o1</div>
-          <div class="button pulse orbitMode" onclick="loadPreset('o2')">o2</div>
-          <div class="button pulse orbitMode" onclick="loadPreset('o3')">o3</div>
-          <div class="button pulse orbitMode" onclick="loadPreset('o4')">o4</div>
-          <div class="button pulse orbitMode" onclick="loadPreset('o5')">o5</div>
-          <div class="button pulse orbitMode" onclick="loadPreset('o6')">o6</div>
+          <div class="button spinMode" onclick="clickPreset('s1')">s1</div>
+          <div class="button spinMode" onclick="clickPreset('s2')">s2</div>
+          <div class="button spinMode" onclick="clickPreset('s3')">s3</div>
+          <div class="button spinMode" onclick="clickPreset('s4')">s4</div>
+          <div class="button patternMode" onclick="clickPreset('p1')">p1</div>
+          <div class="button patternMode" onclick="clickPreset('p2')">p2</div>
+          <div class="button patternMode" onclick="clickPreset('p3')">p3</div>
+          <div class="button patternMode" onclick="clickPreset('p4')">p4</div>
+          <div class="button patternMode" onclick="clickPreset('p5')">p5</div>
+          <div class="button orbitMode" onclick="clickPreset('o1')">o1</div>
+          <div class="button orbitMode" onclick="clickPreset('o2')">o2</div>
+          <div class="button orbitMode" onclick="clickPreset('o3')">o3</div>
+          <div class="button orbitMode" onclick="clickPreset('o4')">o4</div>
+          <div class="button orbitMode" onclick="clickPreset('o5')">o5</div>
+          <div class="button orbitMode" onclick="clickPreset('o6')">o6</div>
         </div>
       </div>
 
       <div id="color">
+        <div id="bubble" class="bubble">
+          <div id="bubbleText">Play with some sliders</div>
+          <div id="bubbleArrow"></div>
+        </div>
         <div class="controlHeader">color</div>
         <div class="controlPanel">
           <div>
@@ -171,12 +178,12 @@
           </div>
           <input type="color" id="bgColor" onchange="updateSetting(this.id, this.value)" />
           <div id="colorPresets">
-            <div class="button pulse" onclick="loadPreset('c1')">1</div>
-            <div class="button pulse" onclick="loadPreset('c2')">2</div>
-            <div class="button pulse" onclick="loadPreset('c3')">3</div>
-            <div class="button pulse" onclick="loadPreset('c4')">4</div>
-            <div class="button pulse" onclick="loadPreset('c5')">5</div>
-            <div class="button pulse" onclick="loadPreset('c6')">6</div>
+            <div class="button" onclick="clickColorPreset('c1')">1</div>
+            <div class="button" onclick="clickColorPreset('c2')">2</div>
+            <div class="button" onclick="clickColorPreset('c3')">3</div>
+            <div class="button" onclick="clickColorPreset('c4')">4</div>
+            <div class="button" onclick="clickColorPreset('c5')">5</div>
+            <div class="button" onclick="clickColorPreset('c6')">6</div>
           </div>
         </div>
       </div>
@@ -188,7 +195,7 @@
     <script src="settings.js" type="text/javascript"></script>
     <script src="presets.js" type="text/javascript"></script>
     <script src="patterns.js" type="text/javascript"></script>
-    <script src="main.js" type="text/javascript"></script>
     <script src="input.js" type="text/javascript"></script>
+    <script src="main.js" type="text/javascript"></script>
   </body>
 </html>

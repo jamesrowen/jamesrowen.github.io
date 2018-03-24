@@ -9,7 +9,7 @@ var settings = {
   'playing': {default: true, parse: parseBool},
   'rewind': {default: false, parse: parseBool},
   'spinSpeed': {default: 15, parse: parseInt, type: 'slider', tween: true},
-  'patternSpeed': {default: 12, parse: parseInt, type: 'slider', tween: true},
+  'patternSpeed': {default: 30, parse: parseInt, type: 'slider', tween: true},
   'orbitSpeed': {default: 40, parse: parseInt, type: 'slider', tween: true},
   // colors
   'color1a': {default: '#101010', parse: x => x, tween: true},
@@ -33,29 +33,27 @@ var settings = {
   'shapeIterations': {default: 8, parse: parseInt, type: 'slider', tween: true},
   // patternMode
   'pattern': {default: 0, parse: parseFloat, type: 'input', tween: true},
-  'curPattern': {default: 'sine', parse: x => x},
-  'loopTrans': {default: true, parse: parseBool},
-  'curTransitions': {default: [
-      ["birds", "diagonal skew", .5],["sine", "diagonal skew", 0]
-    ], parse: JSON.parse},
+  'curPattern': {default: 'herringbone', parse: x => x},
+  'loopTrans': {default: false, parse: parseBool},
+  'curTransitions': {default: [], parse: JSON.parse},
   'patTileSize': {default: 56, parse: parseInt, type: 'slider', tween: true},
   'patTileScale': {default: 1, parse: parseFloat, type: 'slider', tween: true},
-  'transLength': {default: .37, parse: parseFloat, type: 'slider', tween: true},
-  'shortRotations': {default: true, parse: parseBool},
+  'transLength': {default: .3, parse: parseFloat, type: 'slider', tween: true},
+  'shortRotations': {default: false, parse: parseBool},
   'rotX': {default: false, parse: parseBool},
   'rotY': {default: false, parse: parseBool},
   // orbit mode
-  'orbit': {default: 5.2276, parse: parseFloat, type: 'input', tween: true},
+  'orbit': {default: 4.19, parse: parseFloat, type: 'input', tween: true},
   'curl': {default: 22, parse: parseInt, type: 'slider', tween: true},
   'numTiles': {default: 270, parse: parseInt, type: 'slider', tween: true},
   'zoom': {default: 63, parse: parseInt, type: 'slider', tween: true},
   'growth': {default: 100, parse: parseInt, type: 'slider', tween: true},
   'camX': {default: 22, parse: parseFloat, tween: true},
   'camY': {default: 22, parse: parseFloat, tween: true},
-  // manage glowing buttons
-  'changedMode': {default: false, parse: parseBool},
-  'usedPreset': {default: false, parse: parseBool},
-  'usedColorPreset': {default: false, parse: parseBool}
+  // help text
+  'firstTime': {default: true, parse: parseBool},
+  'guidePos': {default: -1, parse: parseInt},
+  'orbitHelpPos': {default: -1, parse: parseInt}
 };
 
 function parseBool(val) {
@@ -94,6 +92,41 @@ function updateSetting(name, value) {
   }
 }
 
+let guideSteps = [
+  ['-450px', 'Play with some sliders', '#modes .slider'],
+  ['-836px', 'Press Space to pause', 'none'],
+  ['-746px', 'Press R to rewind', 'none'],
+  ['-115px', 'Try the presets', '#presets .button'],
+  [  '78px', 'And the color presets', '#colorPresets .button'],
+  ['-469px', 'Click here to change mode', '#modeTabs div:nth-child(2)'],
+  ['-315px', 'Click some transitions', '.trans'],
+  ['-444px', 'Click here to keep them looping', '#loopTrans'],
+  ['-140px', 'Each mode has presets', '#presets .button'],
+  ['-450px', 'Press Esc or click the canvas to hide the controls', 'none']
+];
+function nextGuideStep(delay) {
+  el('bubble').classList.remove('open');
+  elements(guideSteps[guidePos][2]).map(e => e.classList.remove('highlight'));
+  updateSetting('guidePos', guidePos + 1);
+  window.setTimeout(setGuide, delay);
+}
+function setGuide() {
+  if (guidePos < 10) {
+    let bubble = el('bubble');
+    bubble.style.left = guideSteps[guidePos][0];
+    el('bubbleText').textContent = guideSteps[guidePos][1];
+    bubble.classList.add('open');
+
+    elements(guideSteps[guidePos][2]).map(e => e.classList.add('highlight'));
+    if (guidePos == 2)
+      updateSetting('playing', true);
+    if (guidePos == 6)
+      updateSetting('rewind', false);
+    if (guidePos == 9)
+      el('bubbleArrow').style.display = 'none';
+  }
+}
+
 // load available settings from storage
 Object.entries(settings).map(s => {
   let val = window.localStorage.getItem(s[0]);
@@ -101,12 +134,12 @@ Object.entries(settings).map(s => {
   updateSetting(s[0], val);
 });
 
-if (changedMode) {
-  elements('#modeTabs div').map(e => e.classList.remove('pulse'));
-}
-if (usedPreset) {
-  elements('#presets .controlPanel div').map(e => e.classList.remove('pulse'));
-}
-if (usedColorPreset) {
-  elements('#colorPresets div').map(e => e.classList.remove('pulse'));
+// load guide
+if (guidePos == -1) {
+  updateSetting('guidePos', 0);
+  window.setTimeout(() => el('mode').classList.remove('closed'), 4000);
+  window.setTimeout(setGuide, 6000);
+} else {
+  el('mode').classList.remove('closed');
+  window.setTimeout(setGuide, 1000);
 }
