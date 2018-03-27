@@ -189,14 +189,14 @@ a {
 .post img {
 	display: inline-block;
 	width: 100%;
-	margin: 25px 0;
+	margin: 2px 0;
 	border-right: 1px solid;
 }
 
 .post-content { padding-left: .625em; }
 
 .project-blurb {
-	border-top: 1px solid;
+	border-bottom: 1px solid;
 	padding: .5em 0 .25em 0;
 	margin-bottom: 2.5em;
 }
@@ -205,13 +205,6 @@ img.project-image {
 	display: inline-block;
 	margin: 0;
 	width: 22%;
-}
-
-.project-text {
-	display: inline-block;
-	vertical-align: top;
-	margin-left: 2%;
-	width: 74%;
 }
 
 .resume-section {
