@@ -6,6 +6,7 @@ html, body { height: 100% }
 	font: normal 100% sans-serif;
 	line-height: 1.4;
 	border-color: #ddd;
+	min-height: 100%;
 	-webkit-transition:
 		border-color .5s linear,
 		background-color .5s linear;
